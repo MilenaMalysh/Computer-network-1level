@@ -1,4 +1,4 @@
-package com.company;
+package com.kpi.milenamalysheva.computernets.model;
 
 import java.util.Scanner;
 

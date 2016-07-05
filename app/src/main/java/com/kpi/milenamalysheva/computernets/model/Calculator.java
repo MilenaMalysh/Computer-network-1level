@@ -1,7 +1,6 @@
-package com.company;
+package com.kpi.milenamalysheva.computernets.model;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.InterruptedByTimeoutException;
 import java.util.*;
 
 

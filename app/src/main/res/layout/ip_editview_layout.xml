@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center"
+       android:orientation="horizontal">
+    <EditText style="@style/IpEditText"
+              android:id="@+id/byte_3"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <TextView style="@style/IpDivider"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <EditText style="@style/IpEditText"
+              android:id="@+id/byte_2"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <TextView style="@style/IpDivider"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <EditText style="@style/IpEditText"
+              android:id="@+id/byte_1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <TextView style="@style/IpDivider"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <EditText style="@style/IpEditText"
+              android:id="@+id/byte_0"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+</merge>
