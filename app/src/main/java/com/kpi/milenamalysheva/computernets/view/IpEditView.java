@@ -1,15 +1,15 @@
 package com.kpi.milenamalysheva.computernets.view;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.kpi.milenamalysheva.computernets.R;
+import com.kpi.milenamalysheva.computernets.validator.BoundaryNumericValidator;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import butterknife.BindViews;
@@ -17,9 +17,13 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Ivan Prymak on 7/3/2016.
+ * Represents editable view for IP address in standard decimal notation to access and format IP
+ * address from/to long (as we don't have uint here)
  */
-public class IpEditView extends LinearLayout{
-    @BindViews({R.id.byte_0, R.id.byte_1,  R.id.byte_2,  R.id.byte_3}) List<EditText> byteViews;
+public class IpEditView extends LinearLayout {
+    @BindViews({R.id.byte_3, R.id.byte_2, R.id.byte_1, R.id.byte_0})
+    List<EditText> byteViews;
+
     public IpEditView(Context context) {
         super(context);
         init();
@@ -35,40 +39,33 @@ public class IpEditView extends LinearLayout{
         init();
     }
 
-    private void init(){
+    private void init() {
         inflate(getContext(), R.layout.ip_editview_layout, this);
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
         ButterKnife.bind(this);
-        for(EditText byteView: byteViews){
-            byteView.addTextChangedListener(new TextWatcher() {
-                CharSequence mBeforeChange;
-                int start;
-                int end;
-                int oldValue;
-                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    mBeforeChange = s.subSequence(start, start + count);
-                    this.start = start;
-                    this.end = start+after;
-                    }
+        for (EditText byteView : byteViews) {
+            byteView.addTextChangedListener(new BoundaryNumericValidator(0, 255));
+        }
+    }
 
-                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
+    public long getAddress() {
+        long address = 0;
+        for (EditText byteView : byteViews) {
+            int bytedata;
+            bytedata = 0;
+            try {
+                bytedata = Integer.valueOf(byteView.getText().toString());
+            } catch (NumberFormatException ignored){}
+            address = address << 8 | bytedata;
+        }
+        return address;
+    }
 
-                @Override public void afterTextChanged(Editable s) {
-                    if(s.length()>0) {
-                        int byteValue = Integer.parseInt(s.toString());
-                        if (byteValue > 255 || byteValue < 0)
-                            s.replace(start, end, mBeforeChange);
-                        else if(oldValue!=byteValue){
-                            oldValue = byteValue;
-                            s.replace(0, s.length(), String.valueOf(byteValue));
-                        }
-                    } else{
-                        s.replace(0, 0, "0");
-                    }
-                }
-            });
+    public void setAddress(long address) {
+        byte[] bytes = ByteBuffer.allocate(8).putLong(address).array();
+        for (int i = 0; i < 4; i++) {
+            byteViews.get(i).setText(String.valueOf(bytes[i+4]&0xFF));
         }
     }
 }

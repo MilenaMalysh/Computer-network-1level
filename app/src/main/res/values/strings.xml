@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Computer Nets</string>
+    <string name="ip_endpoint_label">IP of zero level net</string>
+    <string name="subnet_amount_label">Subnets amount</string>
+    <string name="subnet_nodes_amount_label">Subnet nodes amount</string>
+    <string name="subnet_index_label">Subnet index</string>
 </resources>

@@ -19,18 +19,21 @@
     <style name="IpEditText">
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:lines">1</item>
-        <item name="android:minEms">3</item>
-        <item name="android:maxEms">3</item>
+        <item name="android:minEms">2</item>
+        <item name="android:maxEms">2</item>
         <item name="android:textSize">24sp</item>
         <item name="android:background">@null</item>
         <item name="android:inputType">numberDecimal</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:freezesText">true</item>
         <item name="android:text">0</item>
     </style>
     <style name="IpDivider">
         <item name="android:text">.</item>
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textSize">24sp</item>
+    </style>
+    <style name="Label">
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

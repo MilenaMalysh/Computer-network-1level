@@ -9,21 +9,18 @@ import java.util.*;
  */
 public class Calculator {
     private long adress;
-    //private List<Integer> mask;
     private long mask;
     private int amount;
     private int type, subnetNumb, amountOfAddrHosts;
     private int maxSubnets;
     private int maxHosts;
     private BitSet subNets, hosts;
-
-
+    private int prefixSub;
 
 
     public Calculator(InputController inputContr) {
         this.adress = inputContr.getAdress();
         this.amount = inputContr.getAmount();
-        //this.amountOfAddrSubn = inputContr.getAmountOfAddrSubn();
         this.subnetNumb = inputContr.getSubnetNumb();
         this.amountOfAddrHosts = inputContr.getAmountOfAddrHosts();
     }
@@ -52,16 +49,16 @@ public class Calculator {
 
         int powerSub = (int)(Math.ceil(Math.log(amount+2) / Math.log(2)));
         maxSubnets = (int) Math.pow(2, powerSub) - 2;
-        System.out.format("Max. amount of subnets %d\n",maxSubnets);
+        //System.out.format("Max. amount of subnets %d\n",maxSubnets);
         maxHosts = (int) Math.pow(2, ((4-type)*8 - offset- powerSub))- 2;
-        System.out.format("Max. amount of hosts %d\n",maxHosts);
+        //System.out.format("Max. amount of hosts %d\n",maxHosts);
 
 
-        int prefixSub = type*8+ powerSub+offset;
+        prefixSub = type*8+ powerSub+offset;
         System.out.format("Prefix %d\n", prefixSub);
         mask = (long)(Math.pow(2, prefixSub)-1)<<((4-type)*8 - powerSub-offset);
 
-        System.out.println("Mask");
+        //System.out.println("Mask");
         printAppropriateFormat(mask);
         System.out.println("\n");
 
@@ -153,5 +150,29 @@ public class Calculator {
             System.out.format("%d. ",b&0xFF);
         }
         System.out.print("\n");
+    }
+
+    public long getMask() {
+        return mask;
+    }
+
+    public int getPrefixSub() {
+        return prefixSub;
+    }
+
+    public int getMaxSubnets() {
+        return maxSubnets;
+    }
+
+    public int getMaxHosts() {
+        return maxHosts;
+    }
+
+    public BitSet getSubNets() {
+        return subNets;
+    }
+
+    public BitSet getHosts() {
+        return hosts;
     }
 }
