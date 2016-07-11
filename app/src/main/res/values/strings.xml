@@ -4,4 +4,13 @@
     <string name="subnet_amount_label">Subnets amount</string>
     <string name="subnet_nodes_amount_label">Subnet nodes amount</string>
     <string name="subnet_index_label">Subnet index</string>
+    <string name="address_type_label">Address type</string>
+    <string name="cisco_label">CISCO</string>
+    <string name="standard_label">Standard</string>
+    <string-array name="net_type">
+        <item>Undefined</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+    </string-array>
 </resources>

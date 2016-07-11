@@ -25,6 +25,9 @@
         <item name="android:background">@null</item>
         <item name="android:inputType">numberDecimal</item>
         <item name="android:gravity">center_horizontal</item>
+        <item name="android:freezesText">false</item>
+        <!--it's for custom saving: as all byteviews use the same ids, so EditText restores one value for all byteview with same id-->
+        <item name="android:saveEnabled">false</item>
         <item name="android:text">0</item>
     </style>
     <style name="IpDivider">
@@ -35,5 +38,11 @@
     <style name="Label">
         <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_gravity">left</item>
+    </style>
+    <style name="Label.Centered">
+        <item name="android:layout_gravity">center</item>
     </style>
 </resources>

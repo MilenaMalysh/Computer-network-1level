@@ -8,21 +8,23 @@ import java.util.*;
  * Created by Milena on 30.06.2016.
  */
 public class Calculator {
+    public static final int AMOUNT = 10;
     private long adress;
     private long mask;
     private int amount;
-    private int type, subnetNumb, amountOfAddrHosts;
+    private int type, subnetNumb;
     private int maxSubnets;
     private int maxHosts;
     private BitSet subNets, hosts;
     private int prefixSub;
+    private int offset;
 
 
     public Calculator(InputController inputContr) {
         this.adress = inputContr.getAdress();
         this.amount = inputContr.getAmount();
         this.subnetNumb = inputContr.getSubnetNumb();
-        this.amountOfAddrHosts = inputContr.getAmountOfAddrHosts();
+        //this.amountOfAddrHosts = inputContr.getAmountOfAddrHosts();
     }
 
     public void calculate(){
@@ -41,8 +43,8 @@ public class Calculator {
             type = 3;
         }
         long shAddr = adress;
-        int offset = 32-type*8;
-        while (((shAddr&0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001)==0)&&(offset!=0)){
+        offset = 32-type*8;
+        while (((shAddr&0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000001)==0)&&(offset !=0)){
             shAddr = shAddr>>>1;
             offset--;
         }
@@ -50,27 +52,27 @@ public class Calculator {
         int powerSub = (int)(Math.ceil(Math.log(amount+2) / Math.log(2)));
         maxSubnets = (int) Math.pow(2, powerSub) - 2;
         //System.out.format("Max. amount of subnets %d\n",maxSubnets);
-        maxHosts = (int) Math.pow(2, ((4-type)*8 - offset- powerSub))- 2;
+        maxHosts = (int) Math.pow(2, ((4-type)*8 - offset - powerSub))- 2;
         //System.out.format("Max. amount of hosts %d\n",maxHosts);
 
 
-        prefixSub = type*8+ powerSub+offset;
+        prefixSub = type*8+ powerSub+ offset;
         System.out.format("Prefix %d\n", prefixSub);
-        mask = (long)(Math.pow(2, prefixSub)-1)<<((4-type)*8 - powerSub-offset);
+        mask = (long)(Math.pow(2, prefixSub)-1)<<((4-type)*8 - powerSub- offset);
 
         //System.out.println("Mask");
         printAppropriateFormat(mask);
         System.out.println("\n");
 
 
-        ArrayList <Long> subnetsClassic = classic(adress, type*8+offset, this.amount);
+        ArrayList <Long> subnetsClassic = getClassic();
         System.out.print("Subnets by classic method");
         for (Long i:subnetsClassic){
             printAppropriateFormat(i);
         }
 
         System.out.print("Subnets by cisco method");
-        ArrayList <Long> subnetsCisco = cisco(adress, prefixSub, this.amount);
+        ArrayList <Long> subnetsCisco = getCisco();
         for (Long i:subnetsCisco){
             printAppropriateFormat(i);
         }
@@ -81,19 +83,19 @@ public class Calculator {
         System.out.format("Cisco method \n");
         printAppropriateFormat(subnetsCisco.get(subnetNumb-1));
 
-        ArrayList <Long> hostsClassic = cisco(subnetsClassic.get(subnetNumb-1), 64, this.amountOfAddrHosts);
+        ArrayList <Long> hostsClassic = cisco(subnetsClassic.get(subnetNumb-1), 64, AMOUNT);
         System.out.print("Hosts by classic method");
         for (Long i:hostsClassic){
             printAppropriateFormat(i);
         }
 
         System.out.print("Hosts by cisco method");
-        ArrayList <Long> hostsCisco = cisco(subnetsCisco.get(subnetNumb-1), 64, this.amountOfAddrHosts);//HARDCODE
+        ArrayList <Long> hostsCisco = cisco(subnetsCisco.get(subnetNumb-1), 64, AMOUNT);//HARDCODE
         for (Long i:hostsCisco){
             printAppropriateFormat(i);
         }
 
-        long broadcastBySubnets = adress|((long)(Math.pow(2, powerSub)-1)<<(32-8*type-powerSub-offset));
+        long broadcastBySubnets = adress|((long)(Math.pow(2, powerSub)-1)<<(32-8*type-powerSub- offset));
         System.out.format("Broadcast on subnets \n");
         printAppropriateFormat(broadcastBySubnets);
 
@@ -103,13 +105,13 @@ public class Calculator {
 
         System.out.print("By classic method");
         for (Long i:subnetsClassic){
-            long result = i|(long)(Math.pow(2,(32-8*type-powerSub-offset))-1);
+            long result = i|(long)(Math.pow(2,(32-8*type-powerSub- offset))-1);
             printAppropriateFormat(result);
         }
 
         System.out.print("By cisco method");
         for (Long i:subnetsCisco){
-            long result = i|(long)(Math.pow(2,(32-8*type-powerSub-offset))-1);
+            long result = i|(long)(Math.pow(2,(32-8*type-powerSub- offset))-1);
             printAppropriateFormat(result);
         }
 
@@ -117,10 +119,18 @@ public class Calculator {
         printAppropriateFormat(broadcastBySubnets);
 
 
-        long broadcastByAll = adress|((long)(Math.pow(2, 32-8*type-offset)-1));
+        long broadcastByAll = adress|((long)(Math.pow(2, 32-8*type- offset)-1));
         System.out.format("Broadcast on all \n");
         printAppropriateFormat(broadcastByAll);
 
+    }
+
+    public ArrayList<Long> getCisco() {
+        return cisco(adress, prefixSub, this.amount);
+    }
+
+    public ArrayList<Long> getClassic() {
+        return classic(adress, type*8+offset, this.amount);
     }
 
     public ArrayList<Long> classic (long mask, int begin, int amount){
@@ -170,6 +180,10 @@ public class Calculator {
 
     public BitSet getSubNets() {
         return subNets;
+    }
+
+    public int getType() {
+        return type;
     }
 
     public BitSet getHosts() {

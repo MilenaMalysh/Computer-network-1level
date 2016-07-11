@@ -1,6 +1,7 @@
 package com.kpi.milenamalysheva.computernets.view;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.EditText;
@@ -14,6 +15,8 @@ import java.util.List;
 
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * Created by Ivan Prymak on 7/3/2016.
@@ -21,8 +24,8 @@ import butterknife.ButterKnife;
  * address from/to long (as we don't have uint here)
  */
 public class IpEditView extends LinearLayout {
-    @BindViews({R.id.byte_3, R.id.byte_2, R.id.byte_1, R.id.byte_0})
-    List<EditText> byteViews;
+    @BindViews({R.id.byte_3, R.id.byte_2, R.id.byte_1, R.id.byte_0}) List<EditText> byteViews;
+    @State long address;
 
     public IpEditView(Context context) {
         super(context);
@@ -63,9 +66,20 @@ public class IpEditView extends LinearLayout {
     }
 
     public void setAddress(long address) {
+        this.address = address;
         byte[] bytes = ByteBuffer.allocate(8).putLong(address).array();
         for (int i = 0; i < 4; i++) {
             byteViews.get(i).setText(String.valueOf(bytes[i+4]&0xFF));
         }
+    }
+
+    @Override protected Parcelable onSaveInstanceState() {
+        address = getAddress();
+        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+    }
+
+    @Override protected void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
+        setAddress(address);
     }
 }

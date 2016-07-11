@@ -1,41 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/white"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
 
     <TextView
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/ip_endpoint_label" />
+        android:text="@string/ip_endpoint_label"/>
 
     <com.kpi.milenamalysheva.computernets.view.IpEditView
         android:id="@+id/ip_endpoint"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <TextView
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/subnet_amount_label" />
+        android:text="@string/subnet_amount_label"/>
 
     <EditText
         android:id="@+id/subnet_amount"
         style="@style/IpEditText"
-        android:text="2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="2"/>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -49,19 +43,15 @@
                 style="@style/Label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/subnet_index_label"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="@string/subnet_index_label"/>
 
             <TextView
                 style="@style/Label"
-                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/subnet_nodes_amount_label" />
+                android:layout_weight="1"
+                android:text="@string/subnet_nodes_amount_label"/>
         </TableRow>
 
         <TableRow
@@ -69,71 +59,141 @@
             android:gravity="center_horizontal">
 
             <EditText
-                android:layout_weight="1"
                 android:id="@+id/subnet_index"
                 style="@style/IpEditText"
-                android:text="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1"/>
 
             <EditText
                 android:id="@+id/subnet_nodes_amount"
                 style="@style/IpEditText"
-                android:text="2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                />
+                android:text="2"
+            />
         </TableRow>
     </TableLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
-            style="@style/Label"
+            style="@style/Label.Centered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Standard" />
+            android:text="@string/standard_label"/>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/address_mode"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <TextView
-            style="@style/Label"
+            style="@style/Label.Centered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CISCO" />
+            android:text="@string/cisco_label"/>
     </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+          android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+          android:layout_marginTop="5dp"
+          android:background="@color/divider"/>
     <TextView
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Mask" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal">
-    <com.kpi.milenamalysheva.computernets.view.IpEditView
-        android:id="@+id/mask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants"/>
+        android:text="@string/address_type_label"/>
+
+    <TextView android:id="@+id/net_type"
+              style="@style/IpEditText"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" android:text=""/>
     <TextView
-        android:id="@+id/prefix"
+        style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="/0"
-        style="@style/IpDivider"/>
-</LinearLayout>
+        android:text="Mask"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <com.kpi.milenamalysheva.computernets.view.IpEditView
+            android:id="@+id/mask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+        <TextView
+            android:id="@+id/prefix"
+            style="@style/IpDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/0"/>
+    </LinearLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal">
+
+            <TextView
+                style="@style/Label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max subnets"/>
+
+            <TextView
+                style="@style/Label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max hosts"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/max_subnets"
+                style="@style/IpEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/max_hosts"
+                style="@style/IpEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+            />
+        </TableRow>
+    </TableLayout>
+    <TextView
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subnets"/>
+    <com.kpi.milenamalysheva.computernets.view.IpListPreviewLayout
+        android:id="@+id/subnet_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:descendantFocusability="blocksDescendants"
+        app:max_preview="5"/>
 </LinearLayout>
