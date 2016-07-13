@@ -8,6 +8,7 @@ import java.util.*;
  * Created by Milena on 30.06.2016.
  */
 public class Calculator {
+    private final int amountOfAddrHosts;
     private long adress;
     private long mask;
     private int amount;
@@ -31,7 +32,7 @@ public class Calculator {
         this.adress = inputContr.getAdress();
         this.amount = inputContr.getAmount();
         this.subnetNumb = inputContr.getSubnetNumb();
-        //this.amountOfAddrHosts = inputContr.getAmountOfAddrHosts();
+        this.amountOfAddrHosts = inputContr.getAmountOfAddrHosts();
     }
 
     public void calculate(){
@@ -90,18 +91,18 @@ public class Calculator {
         System.out.format("Cisco method \n");
         printAppropriateFormat(subnetsCisco.get(subnetNumb-1));
 
-        hostsClassic = cisco(subnetsClassic.get(subnetNumb-1), 64, maxHosts);
-        System.out.print("Hosts by classic method");
+        hostsClassic = cisco(subnetsClassic.get(subnetNumb-1), 64, amountOfAddrHosts);
+        /*System.out.print("Hosts by classic method");
         for (Long i: hostsClassic){
             printAppropriateFormat(i);
-        }
+        }*/
 
         System.out.print("Hosts by cisco method");
         //HARDCODE
-        hostsCisco = cisco(subnetsCisco.get(subnetNumb-1), 64, maxHosts);
-        for (Long i: hostsCisco){
+        hostsCisco = cisco(subnetsCisco.get(subnetNumb-1), 64, amountOfAddrHosts);
+        /*for (Long i: hostsCisco){
             printAppropriateFormat(i);
-        }
+        }*/
 
         broadcastBySubnets = adress|((long)(Math.pow(2, powerSub)-1)<<(32-8*type-powerSub- offset));
         System.out.format("Broadcast on subnets \n");
