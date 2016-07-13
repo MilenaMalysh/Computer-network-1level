@@ -21,6 +21,7 @@ import nucleus.view.NucleusAppCompatActivity;
 @RequiresPresenter(AddressListPresenter.class)
 public class AddressListActivity extends NucleusAppCompatActivity<AddressListPresenter> {
     public static final String LIST_ITEMS = "list_items";
+    public static final String PREFIX = "prefix";
     public static final String TITLE = "title";
 
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -31,11 +32,12 @@ public class AddressListActivity extends NucleusAppCompatActivity<AddressListPre
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle(getIntent().getStringExtra(TITLE));
-        getPresenter().showList((Long[]) getIntent().getSerializableExtra(LIST_ITEMS));
+        getPresenter().showList((Long[]) getIntent().getSerializableExtra(LIST_ITEMS),
+                getIntent().getIntExtra(PREFIX, 0));
     }
 
-    public void setIps(Long[] ips) {
-        list.setAdapter(new IpListAdapter(ips, 0));
+    public void setIps(Long[] ips, int prefix) {
+        list.setAdapter(new IpListAdapter(ips, prefix));
     }
 
 }

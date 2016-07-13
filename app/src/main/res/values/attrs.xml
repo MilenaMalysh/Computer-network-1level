@@ -3,4 +3,7 @@
     <declare-styleable name="IpListPreviewLayout">
         <attr name="max_preview" format="integer"/>
     </declare-styleable>
+    <declare-styleable name="IpEditView">
+        <attr name="editable" format="boolean"/>
+    </declare-styleable>
 </resources>

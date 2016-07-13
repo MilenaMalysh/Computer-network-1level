@@ -8,7 +8,6 @@ import java.util.*;
  * Created by Milena on 30.06.2016.
  */
 public class Calculator {
-    public static final int AMOUNT = 10;
     private long adress;
     private long mask;
     private int amount;
@@ -18,6 +17,14 @@ public class Calculator {
     private BitSet subNets, hosts;
     private int prefixSub;
     private int offset;
+    private ArrayList<Long> subnetsClassic;
+    private ArrayList<Long> subnetsCisco;
+    private ArrayList<Long> hostsClassic;
+    private ArrayList<Long> hostsCisco;
+    private long broadcastBySubnets;
+    private long broadcastByAll;
+    private ArrayList<Long> broadcastByCiscoHosts;
+    private ArrayList<Long> broadcastByClassicHosts;
 
 
     public Calculator(InputController inputContr) {
@@ -65,15 +72,15 @@ public class Calculator {
         System.out.println("\n");
 
 
-        ArrayList <Long> subnetsClassic = getClassic();
+        subnetsClassic = classic(adress, type*8+offset, this.amount);
         System.out.print("Subnets by classic method");
-        for (Long i:subnetsClassic){
+        for (Long i: subnetsClassic){
             printAppropriateFormat(i);
         }
 
         System.out.print("Subnets by cisco method");
-        ArrayList <Long> subnetsCisco = getCisco();
-        for (Long i:subnetsCisco){
+        subnetsCisco = cisco(adress, prefixSub, this.amount);
+        for (Long i: subnetsCisco){
             printAppropriateFormat(i);
         }
 
@@ -83,19 +90,20 @@ public class Calculator {
         System.out.format("Cisco method \n");
         printAppropriateFormat(subnetsCisco.get(subnetNumb-1));
 
-        ArrayList <Long> hostsClassic = cisco(subnetsClassic.get(subnetNumb-1), 64, AMOUNT);
+        hostsClassic = cisco(subnetsClassic.get(subnetNumb-1), 64, maxHosts);
         System.out.print("Hosts by classic method");
-        for (Long i:hostsClassic){
+        for (Long i: hostsClassic){
             printAppropriateFormat(i);
         }
 
         System.out.print("Hosts by cisco method");
-        ArrayList <Long> hostsCisco = cisco(subnetsCisco.get(subnetNumb-1), 64, AMOUNT);//HARDCODE
-        for (Long i:hostsCisco){
+        //HARDCODE
+        hostsCisco = cisco(subnetsCisco.get(subnetNumb-1), 64, maxHosts);
+        for (Long i: hostsCisco){
             printAppropriateFormat(i);
         }
 
-        long broadcastBySubnets = adress|((long)(Math.pow(2, powerSub)-1)<<(32-8*type-powerSub- offset));
+        broadcastBySubnets = adress|((long)(Math.pow(2, powerSub)-1)<<(32-8*type-powerSub- offset));
         System.out.format("Broadcast on subnets \n");
         printAppropriateFormat(broadcastBySubnets);
 
@@ -104,14 +112,18 @@ public class Calculator {
         System.out.format("Broadcast on hosts \n");
 
         System.out.print("By classic method");
-        for (Long i:subnetsClassic){
+        broadcastByClassicHosts = new ArrayList<>(subnetsClassic.size());
+        for (Long i: subnetsClassic){
             long result = i|(long)(Math.pow(2,(32-8*type-powerSub- offset))-1);
+            broadcastByClassicHosts.add(result);
             printAppropriateFormat(result);
         }
 
         System.out.print("By cisco method");
-        for (Long i:subnetsCisco){
+        broadcastByCiscoHosts = new ArrayList<>(subnetsCisco.size());
+        for (Long i: subnetsCisco){
             long result = i|(long)(Math.pow(2,(32-8*type-powerSub- offset))-1);
+            broadcastByCiscoHosts.add(result);
             printAppropriateFormat(result);
         }
 
@@ -119,18 +131,42 @@ public class Calculator {
         printAppropriateFormat(broadcastBySubnets);
 
 
-        long broadcastByAll = adress|((long)(Math.pow(2, 32-8*type- offset)-1));
+        broadcastByAll = adress|((long)(Math.pow(2, 32-8*type- offset)-1));
         System.out.format("Broadcast on all \n");
         printAppropriateFormat(broadcastByAll);
 
     }
 
     public ArrayList<Long> getCisco() {
-        return cisco(adress, prefixSub, this.amount);
+        return subnetsCisco;
     }
 
     public ArrayList<Long> getClassic() {
-        return classic(adress, type*8+offset, this.amount);
+        return subnetsClassic;
+    }
+
+    public ArrayList<Long> getHostsClassic() {
+        return hostsClassic;
+    }
+
+    public ArrayList<Long> getHostsCisco() {
+        return hostsCisco;
+    }
+
+    public long getBroadcastBySubnets() {
+        return broadcastBySubnets;
+    }
+
+    public ArrayList<Long> getBroadcastByCiscoHosts(){
+        return broadcastByCiscoHosts;
+    }
+
+    public ArrayList<Long> getBroadcastByClassicHosts() {
+        return broadcastByClassicHosts;
+    }
+
+    public long getBroadcastByAll() {
+        return broadcastByAll;
     }
 
     public ArrayList<Long> classic (long mask, int begin, int amount){

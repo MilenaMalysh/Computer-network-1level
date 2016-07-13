@@ -9,8 +9,6 @@ import com.kpi.milenamalysheva.computernets.model.Calculator;
 import com.kpi.milenamalysheva.computernets.model.InputController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import icepick.State;
 import nucleus.presenter.RxPresenter;
@@ -22,7 +20,7 @@ import rx.schedulers.Schedulers;
  * Created by Ivan Prymak on 7/6/2016.
  * Presenter for {@link MainActivity}
  */
-public class MainPresenter extends RxPresenter<MainActivity> implements InputController {
+public class MainPresenter extends StateSavingPresenter<MainActivity> implements InputController {
     public static final int CALCULATE_ID = 1;
     @State long ipEndpoint;
     @State int subnetsAmount;
@@ -30,6 +28,10 @@ public class MainPresenter extends RxPresenter<MainActivity> implements InputCon
     @State int subnetNodeAmount;
     @State boolean isCisco;
     @State Long[] subnets;
+    @State Long[] hosts;
+    @State Long[] broadcasts;
+    @State int prefix;
+
     @Override protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         restartableLatestCache(
@@ -41,17 +43,33 @@ public class MainPresenter extends RxPresenter<MainActivity> implements InputCon
                 }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()),
                 (view, calculator) -> {
                     view.showMask(calculator.getMask(), calculator.getPrefixSub());
-                    ArrayList<Long> ips;
-                    if(isCisco) {
-                        ips = calculator.getCisco();
-                    }else{
-                        ips = calculator.getClassic();
-                    }
-                    subnets = new Long[ips.size()];
-                    ips.toArray(subnets);
-                    view.showSubnetsPreview(ips);
+                    prefix = calculator.getPrefixSub();
                     view.showNetType(calculator.getType());
                     view.showMaxes(calculator.getMaxSubnets(), calculator.getMaxHosts());
+                    ArrayList<Long> subnets;
+                    ArrayList<Long> hosts;
+                    ArrayList<Long> broadcasts;
+                    if(isCisco) {
+                        subnets = calculator.getCisco();
+                        hosts = calculator.getHostsCisco();
+                        broadcasts = calculator.getBroadcastByCiscoHosts();
+                    }else{
+                        subnets = calculator.getClassic();
+                        hosts = calculator.getHostsClassic();
+                        broadcasts = calculator.getBroadcastByClassicHosts();
+                    }
+                    this.subnets = new Long[subnets.size()];
+                    subnets.toArray(this.subnets);
+                    this.hosts = new Long[hosts.size()];
+                    hosts.toArray(this.hosts);
+                    this.broadcasts = new Long[broadcasts.size()];
+                    broadcasts.toArray(this.broadcasts);
+                    view.showSubnetsPreview(subnets);
+                    view.showHostsPreview(hosts);
+                    view.showBroadcasts(calculator.getBroadcastByAll(),
+                            calculator.getBroadcastBySubnets(),
+                            prefix,
+                            broadcasts);
                     view.dismissRefresh();
                 },
                 (view, e) -> {
@@ -71,9 +89,23 @@ public class MainPresenter extends RxPresenter<MainActivity> implements InputCon
     }
 
     public void showAllSubnets(MainActivity mainActivity) {
+        startListActivity(mainActivity, subnets, prefix, "Subnets");
+    }
+
+    public void showAllHosts(MainActivity mainActivity) {
+        startListActivity(mainActivity, hosts, prefix, "Hosts of "+subnetIndex+" subnet");
+    }
+
+    public void showAllBroadcastsByHosts(MainActivity mainActivity) {
+        startListActivity(mainActivity, broadcasts, prefix, "Broadcasts of "+subnetIndex+" subnet");
+    }
+
+
+    private void startListActivity(MainActivity mainActivity, Long[] subnets, int prefix, String title) {
         Intent listAddressesIntent = new Intent(mainActivity, AddressListActivity.class);
-        listAddressesIntent.putExtra(AddressListActivity.TITLE, "Subnets");
+        listAddressesIntent.putExtra(AddressListActivity.TITLE, title);
         listAddressesIntent.putExtra(AddressListActivity.LIST_ITEMS, subnets);
+        listAddressesIntent.putExtra(AddressListActivity.PREFIX, prefix);
         mainActivity.startActivity(listAddressesIntent);
     }
 

@@ -45,6 +45,7 @@ public class IpListPreviewLayout extends LinearLayout {
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             IpEditView child = new IpEditView(getContext());
             child.setVisibility(GONE);
+            child.setEditable(false);
             addView(child, params);
         }
     }

@@ -1,6 +1,7 @@
 package com.kpi.milenamalysheva.computernets.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -26,28 +27,33 @@ import icepick.State;
 public class IpEditView extends LinearLayout {
     @BindViews({R.id.byte_3, R.id.byte_2, R.id.byte_1, R.id.byte_0}) List<EditText> byteViews;
     @State long address;
+    private boolean editable;
 
     public IpEditView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public IpEditView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public IpEditView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IpEditView);
+        editable = a.getBoolean(R.styleable.IpEditView_editable, true);
+        a.recycle();
+        init(editable);
     }
 
-    private void init() {
+    private void init(boolean editable) {
         inflate(getContext(), R.layout.ip_editview_layout, this);
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
         ButterKnife.bind(this);
         for (EditText byteView : byteViews) {
+            byteView.setClickable(editable);
+            byteView.setFocusableInTouchMode(editable);
+            byteView.setFocusable(editable);
             byteView.addTextChangedListener(new BoundaryNumericValidator(0, 255));
         }
     }
@@ -59,7 +65,8 @@ public class IpEditView extends LinearLayout {
             bytedata = 0;
             try {
                 bytedata = Integer.valueOf(byteView.getText().toString());
-            } catch (NumberFormatException ignored){}
+            } catch (NumberFormatException ignored) {
+            }
             address = address << 8 | bytedata;
         }
         return address;
@@ -69,7 +76,7 @@ public class IpEditView extends LinearLayout {
         this.address = address;
         byte[] bytes = ByteBuffer.allocate(8).putLong(address).array();
         for (int i = 0; i < 4; i++) {
-            byteViews.get(i).setText(String.valueOf(bytes[i+4]&0xFF));
+            byteViews.get(i).setText(String.valueOf(bytes[i + 4] & 0xFF));
         }
     }
 
@@ -81,5 +88,26 @@ public class IpEditView extends LinearLayout {
     @Override protected void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
         setAddress(address);
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+        for (EditText byteView : byteViews) {
+            byteView.setClickable(editable);
+            byteView.setFocusableInTouchMode(editable);
+            byteView.setFocusable(editable);
+            if (!editable) {
+                byteView.setMovementMethod(null);
+                byteView.setKeyListener(null);
+            }
+        }
+    }
+
+    @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
     }
 }

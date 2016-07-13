@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="2"
-            />
+                />
         </TableRow>
     </TableLayout>
 
@@ -101,35 +101,46 @@
             android:layout_height="wrap_content"
             android:text="@string/cisco_label"/>
     </LinearLayout>
-    <View android:layout_width="match_parent" android:layout_height="1dp"
-          android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
-          android:layout_marginTop="5dp"
-          android:background="@color/divider"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/divider"/>
+
     <TextView
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/address_type_label"/>
 
-    <TextView android:id="@+id/net_type"
-              style="@style/IpEditText"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" android:text=""/>
+    <TextView
+        android:id="@+id/net_type"
+        style="@style/IpEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
     <TextView
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mask"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
+
         <com.kpi.milenamalysheva.computernets.view.IpEditView
             android:id="@+id/mask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"/>
+
         <TextView
             android:id="@+id/prefix"
             style="@style/IpDivider"
@@ -137,6 +148,7 @@
             android:layout_height="wrap_content"
             android:text="/0"/>
     </LinearLayout>
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -179,14 +191,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
-            />
+                />
         </TableRow>
     </TableLayout>
+
     <TextView
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Subnets"/>
+
     <com.kpi.milenamalysheva.computernets.view.IpListPreviewLayout
         android:id="@+id/subnet_preview"
         android:layout_width="match_parent"
@@ -194,6 +208,87 @@
         android:animateLayoutChanges="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:descendantFocusability="blocksDescendants"
         app:max_preview="5"/>
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First hosts of index"/>
+
+    <com.kpi.milenamalysheva.computernets.view.IpListPreviewLayout
+        android:id="@+id/hosts_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:max_preview="5"/>
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subnets broadcast"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.kpi.milenamalysheva.computernets.view.IpEditView
+            android:id="@+id/broadcast_subnets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/broadcast_subnets_prefix"
+            style="@style/IpDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/0"/>
+    </LinearLayout>
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First broadcasts to subnets"/>
+
+    <com.kpi.milenamalysheva.computernets.view.IpListPreviewLayout
+        android:id="@+id/broadcast_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:max_preview="5"/>
+
+    <TextView
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All nodes broadcast"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.kpi.milenamalysheva.computernets.view.IpEditView
+            android:id="@+id/broadcast_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"/>
+
+        <TextView
+            android:id="@+id/broadcast_all_prefix"
+            style="@style/IpDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/0"/>
+    </LinearLayout>
 </LinearLayout>

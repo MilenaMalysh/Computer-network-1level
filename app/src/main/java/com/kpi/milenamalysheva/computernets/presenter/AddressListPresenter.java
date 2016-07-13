@@ -15,21 +15,23 @@ import rx.Observable;
  * Created by Ivan Prymak on 7/6/2016.
  * Presenter for {@link AddressListActivity}
  */
-public class AddressListPresenter extends RxPresenter<AddressListActivity> {
+public class AddressListPresenter extends StateSavingPresenter<AddressListActivity> {
 
     public static final int SHOW_LIST = 1;
     @State Long[] ips;
+    @State int prefix;
 
     @Override protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         restartableLatestCache(
                 SHOW_LIST,
                 ()-> Observable.just(ips),
-                (activity, nullValue)-> activity.setIps(ips));
+                (activity, nullValue)-> activity.setIps(ips, prefix));
     }
 
-    public void showList(Long[] ips){
+    public void showList(Long[] ips, int prefix){
         this.ips = ips;
+        this.prefix = prefix;
         start(SHOW_LIST);
     }
 }

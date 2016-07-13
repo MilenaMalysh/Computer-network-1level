@@ -25,17 +25,27 @@ import nucleus.view.NucleusAppCompatActivity;
 @RequiresPresenter(MainPresenter.class)
 public class MainActivity extends NucleusAppCompatActivity<MainPresenter> {
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.swipe_refresh_wrapper) SwipeRefreshLayout swipeWrapper;
+
     @BindView(R.id.ip_endpoint) IpEditView ipEndpoint;
     @BindView(R.id.subnet_amount) EditText subnetAmount;
     @BindView(R.id.subnet_index) EditText subnetIndex;
     @BindView(R.id.subnet_nodes_amount) EditText subnetNodesAmount;
+
     @BindView(R.id.net_type) TextView netType;
     @BindView(R.id.mask) IpEditView mask;
     @BindView(R.id.prefix) TextView prefix;
+
     @BindView(R.id.max_subnets) TextView maxSubnets;
     @BindView(R.id.max_hosts) TextView maxHosts;
-    @BindView(R.id.swipe_refresh_wrapper) SwipeRefreshLayout swipeWrapper;
+
     @BindView(R.id.subnet_preview) IpListPreviewLayout subnetPreview;
+    @BindView(R.id.broadcast_all) IpEditView broadcastAll;
+    @BindView(R.id.broadcast_all_prefix) TextView broadcastAllPrefix;
+    @BindView(R.id.broadcast_subnets) IpEditView broadcastSubnets;
+    @BindView(R.id.broadcast_subnets_prefix) TextView broadcastSubnetsPrefix;
+    @BindView(R.id.broadcast_preview) IpListPreviewLayout broadcastPreview;
+    @BindView(R.id.hosts_preview) IpListPreviewLayout hostPreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,46 +54,69 @@ public class MainActivity extends NucleusAppCompatActivity<MainPresenter> {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle(R.string.app_name);
-        subnetAmount.addTextChangedListener(new BoundaryNumericValidator(2,0xffff));
-        subnetIndex.addTextChangedListener(new BoundaryNumericValidator(1, 0xffff-1));
-        subnetNodesAmount.addTextChangedListener(new BoundaryNumericValidator(2,0xffff));
-        swipeWrapper.setOnRefreshListener(()-> getPresenter().calculate(ipEndpoint.getAddress(),
+        subnetAmount.addTextChangedListener(new BoundaryNumericValidator(2, 0xffff));
+        subnetIndex.addTextChangedListener(new BoundaryNumericValidator(1, 0xffff - 1));
+        subnetNodesAmount.addTextChangedListener(new BoundaryNumericValidator(2, 0xffff));
+        swipeWrapper.setOnRefreshListener(() -> getPresenter().calculate(ipEndpoint.getAddress(),
                 Integer.valueOf(subnetAmount.getText().toString()),
                 Integer.valueOf(subnetIndex.getText().toString()),
                 Integer.valueOf(subnetNodesAmount.getText().toString())
-                ));
+        ));
     }
 
     @SuppressWarnings("unused")
-    @OnCheckedChanged(R.id.address_mode) void changeAddressMode(boolean checked){
+    @OnCheckedChanged(R.id.address_mode) void changeAddressMode(boolean checked) {
         getPresenter().changeAddressMode(checked);
     }
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.subnet_preview) void showAllAddress(){
+    @OnClick(R.id.subnet_preview) void showAllAddress() {
         getPresenter().showAllSubnets(this);
     }
 
-    public void showError(String msg){
+    @SuppressWarnings("unused")
+    @OnClick(R.id.hosts_preview) void showAllHostsOfIndex() {
+        getPresenter().showAllHosts(this);
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.broadcast_preview) void showAllBroadcastsByHosts() {
+        getPresenter().showAllBroadcastsByHosts(this);
+    }
+
+    public void showError(String msg) {
         Snackbar.make(getWindow().getDecorView().getRootView(), msg, Snackbar.LENGTH_LONG).show();
     }
 
-    @SuppressLint("DefaultLocale") public void showMask(long mask, int prefix){
+    @SuppressLint("DefaultLocale") public void showMask(long mask, int prefix) {
         this.mask.setAddress(mask);
         this.prefix.setText(String.format("/%d", prefix));
     }
 
-    public void showSubnetsPreview(ArrayList<Long> ips){
+    public void showSubnetsPreview(ArrayList<Long> ips) {
         subnetPreview.setIps(ips);
     }
 
-    public void showNetType(int type){
+    public void showHostsPreview(ArrayList<Long> ips) {
+        hostPreview.setIps(ips);
+    }
+
+    public void showNetType(int type) {
         netType.setText(getResources().getStringArray(R.array.net_type)[type]);
     }
 
-    @SuppressLint("SetTextI18n") public void showMaxes(int maxSubnets, int maxHosts){
+    @SuppressLint("SetTextI18n") public void showMaxes(int maxSubnets, int maxHosts) {
         this.maxSubnets.setText(Integer.toString(maxSubnets));
         this.maxHosts.setText(Integer.toString(maxHosts));
+    }
+
+    @SuppressLint("DefaultLocale")
+    public void showBroadcasts(long broadcastAllIp, long broadcastSubnets, int broadcastPrefix, ArrayList<Long> broadcastSubIps) {
+        this.broadcastAll.setAddress(broadcastAllIp);
+        this.broadcastSubnets.setAddress(broadcastSubnets);
+        this.broadcastAllPrefix.setText(String.format("/%d", broadcastPrefix));
+        this.broadcastSubnetsPrefix.setText(String.format("/%d", broadcastPrefix));
+        this.broadcastPreview.setIps(broadcastSubIps);
     }
 
     public void dismissRefresh() {
